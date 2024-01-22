@@ -9,30 +9,36 @@ package com.example.security1.config.auth;
 // User 오브젝트 타입 => UserDetails 타입 객체
 
 import com.example.security1.model.User;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 // Security Session => Authentication => UserDetails
-public class PrincipalDetails implements UserDetails {
+// Authentication 객체에 저장할 수 있는 유일한 타입
+public class PrincipalDetails implements UserDetails, OAuth2User{
+
+    private static final long serialVersionUID = 1L;
     private User user;
+    private Map<String, Object> attributes;
+
+    // 일반 시큐리티 로그인시 사용
     public PrincipalDetails(User user) {
         this.user = user;
     }
 
-    // 해당 User의 권한을 리턴하는 곳
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> collection = new ArrayList<>();
-        collection.add(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return user.getRole();
-            }
-        });
-        return collection;
+    // OAuth2.0 로그인시 사용
+    public PrincipalDetails(User user, Map<String, Object> attributes) {
+        this.user = user;
+        this.attributes = attributes;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     @Override
@@ -52,7 +58,7 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
@@ -62,10 +68,26 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-
-        // 예를 들어서, 우리 사이트에서 1년동안 회원이 로그인을 안하면 휴먼 계정으로 하기로 함.
-        // 현재 시간 - 로그인 마지막 시간 => 1년을 초기화하면 user.getLoginDate()를 가져와서 로직을 알짝딱 짜준다.
-
         return true;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<GrantedAuthority> collet = new ArrayList<GrantedAuthority>();
+        collet.add(()->{ return user.getRole();});
+        return collet;
+    }
+
+    // 리소스 서버로 부터 받는 회원정보
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
+
+    // User의 PrimaryKey
+    @Override
+    public String getName() {
+        return user.getId()+"";
+    }
+
 }

@@ -38,7 +38,7 @@ public class SecurityConfig {
                 )
                 .formLogin(login -> login
                         .loginPage("/loginForm")
-                        .loginProcessingUrl("/login") // login 주소가 호출이 되면 시큐리티가 낚아채서 대신 로그인을 진행해준다.
+                        .loginProcessingUrl("/loginProc") // login 주소가 호출이 되면 시큐리티가 낚아채서 대신 로그인을 진행해준다.
                         .defaultSuccessUrl("/") // 로그인이 완료되면 일로 이동한다.
                 )
                 .oauth2Login(login -> login
