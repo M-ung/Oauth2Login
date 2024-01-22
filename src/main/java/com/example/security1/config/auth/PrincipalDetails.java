@@ -18,8 +18,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-// Security Session => Authentication => UserDetails
-// Authentication 객체에 저장할 수 있는 유일한 타입
+// 이렇게 두 가지 경우로 나뉜다.
+// Security Session => Authentication => UserDetails (일반적인 로그인)
+// Security Session => Authentication => OAuth2User (소셜 로그인)
 public class PrincipalDetails implements UserDetails, OAuth2User{
 
     private static final long serialVersionUID = 1L;
@@ -73,9 +74,9 @@ public class PrincipalDetails implements UserDetails, OAuth2User{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> collet = new ArrayList<GrantedAuthority>();
-        collet.add(()->{ return user.getRole();});
-        return collet;
+        Collection<GrantedAuthority> collection = new ArrayList<GrantedAuthority>();
+        collection.add(()->{ return user.getRole();});
+        return collection;
     }
 
     // 리소스 서버로 부터 받는 회원정보

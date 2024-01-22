@@ -9,6 +9,7 @@ import java.security.Timestamp;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,4 +21,14 @@ public class User {
 
     private String provider;
     private String providerId;
+
+    @Builder
+    public User(String username, String password, String email, String role, String provider, String providerId) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.provider = provider;
+        this.providerId = providerId;
+    }
 }

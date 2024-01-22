@@ -20,9 +20,8 @@ public class SecurityConfig {
     @Autowired
     private PrincipalOauth2UserService principalOauth2UserService;
 
-    // 해당 메서드의 리턴되는 오브젝트를 IoC로 등록해준다.
     @Bean
-    public BCryptPasswordEncoder encoderPwd() {
+    public BCryptPasswordEncoder encodePwd() {
         return new BCryptPasswordEncoder();
     }
 

@@ -15,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -41,15 +40,16 @@ public class IndexController {
         System.out.println("oauth = " + oauth.getAttributes());
         return "Oauth 세션 정보 확인하기";
     }
+    @GetMapping("/user")
+    public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails) { // 그냥 이렇게 하면 된다. 왜냐하면 PrincipalDetails 이미 두 가지를 모두 상속받기 때문이다.
+        System.out.println("principalDetails.getUser() = " + principalDetails.getUser());
+        return "user";
+    }
     @GetMapping({ "", "/" })
     public @ResponseBody String index() {
         return "인덱스 페이지입니다.";
     }
 
-    @GetMapping("/user")
-    public @ResponseBody String user() {
-        return "user";
-    }
     @GetMapping("/admin")
     public @ResponseBody String admin() {
         return "admin";
