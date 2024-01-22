@@ -5,6 +5,8 @@ import com.example.security1.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +41,10 @@ public class IndexController {
     public String loginForm() {
         return "loginForm";
     }
+//    @GetMapping("/login")
+//    public String login() {
+//        return "login";
+//    }
 
     @GetMapping("/joinForm")
     public String joinForm() {
@@ -46,15 +52,26 @@ public class IndexController {
     }
 
     @PostMapping("/join")
-    public @ResponseBody String join(User user) {
-        user.setRole("USER");
+    public String join(User user) {
+        System.out.println("회원가입 진행 : " + user);
         String rawPassword = user.getPassword();
         String encPassword = bCryptPasswordEncoder.encode(rawPassword);
         user.setPassword(encPassword);
-
-        System.out.println("==============================================");
-        System.out.println("user = " + user);
+        user.setRole("ROLE_USER");
         userRepository.save(user);
-        return "redirect:/loginForm";
+        return "redirect:/";
+    }
+
+    @GetMapping("/info")
+    @Secured("ADMIN") // ADMIN만 들어갈 수 있다.
+    public  @ResponseBody String info() {
+        return "개인정보";
+    }
+
+    @GetMapping("/data")
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+    @Secured("ADMIN") // ADMIN만 들어갈 수 있다.
+    public  @ResponseBody String data() {
+        return "데이터정보";
     }
 }
