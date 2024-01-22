@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.security.Provider;
 import java.security.Timestamp;
 
 @Entity
@@ -16,4 +17,7 @@ public class User {
     private String password;
     private String email;
     private String role; //ROLE_USER, ROLE_ADMIN
+
+    private String provider;
+    private String providerId;
 }
