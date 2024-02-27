@@ -1,2 +1,2 @@
-# SpringSecurity
-스프링 시큐리티 공부
+# Oauth2Login
+Oauth2Login 공부
